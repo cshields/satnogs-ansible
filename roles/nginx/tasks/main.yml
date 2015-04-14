@@ -34,7 +34,7 @@
     mode: 644
   with_items:
     - {
-      src: "../templates/nginx.conf.j2",
+      src: "nginx.conf.j2",
       dest: "/etc/nginx/nginx.conf"
       }
   notify: restart nginx
