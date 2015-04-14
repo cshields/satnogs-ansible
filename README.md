@@ -10,7 +10,7 @@ Ansible scripts for SatNOGS infra
 
 ## Usage
 
-Assuming you have sudo access:
+Assuming you have sudo access and `hosts.gpg` is decrypted:
 
 ```
 ansible-playbook main.yml
