@@ -12,7 +12,7 @@
 
 - name: Remove default configuration file
   file:
-    path: etc/nginx/nginx.conf.default
+    path: /etc/nginx/nginx.conf.default
     state: absent
   notify:
     - restart nginx
