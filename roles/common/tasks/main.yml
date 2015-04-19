@@ -16,9 +16,18 @@
     - tar
     - policycoreutils-python
     - git
+    - net-tools
+    - python-devel
+    - gcc
+    - libxslt-devel
+    - libxml2-devel
+    - libjpeg-turbo-devel
   tags:
     - yum
     - pkg
+
+- name: Add deploy group
+  group: name=deploy state=present
 
 - name: Add admins
   user: name={{ item.name }} group={{ item.name }} groups=wheel state=present
