@@ -2,4 +2,7 @@ vault-passwd.txt
 hosts
 *crt
 *key
+*pem
+*csr
 *swp
+.vagrant/
