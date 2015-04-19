@@ -1,9 +1,12 @@
 ---
 - hosts: all
   sudo: yes
+  sudo_user: root
   gather_facts: True
 
   roles:
     - common
-    - nginx
-    - mariadb
+    - { role: firewalld, tags: ['firewall'] }
+    - { role: nginx, tags: ['nginx'] }
+    - { role: postgres, tags: ['postgres', 'database'] }
+    #- satnogs-network
