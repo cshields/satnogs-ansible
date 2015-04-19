@@ -1,0 +1,7 @@
+---
+# vars file for nginx
+
+sitename: "network.satnogs.org"
+ssl_cert: "/etc/ssl/satnogs.org/ssl-unified.crt"
+ssl_cert_key: "/etc/ssl/satnogs.org/ssl.key"
+satnogs_root: "/var/www/satnogs/app/static"

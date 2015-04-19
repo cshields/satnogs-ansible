@@ -7,9 +7,6 @@
   tags:
     - nginx
 
-- name: Enable nginx service
-  service: name=nginx state=started enabled=yes
-
 - name: Remove default configuration file
   file:
     path: /etc/nginx/nginx.conf.default
@@ -37,6 +34,10 @@
       src: "nginx.conf.j2",
       dest: "/etc/nginx/nginx.conf"
       }
+    - {
+      src: "satnogs.conf.j2",
+      dest: "/etc/nginx/conf.d/satnogs.conf"
+      }
   notify: restart nginx
   tags:
     - nginx
@@ -52,11 +53,34 @@
   changed_when: 'rm_result.stdout != ""'
   tags:
     - nginx
-    
-- name: Add nginx ports to firewall
-  firewalld: port=80/tcp zone=public permanent=true state=enabled
-  #firewalld: service=https zone=public permanent=true state=disabled
-  notify: restart firewalld
+
+- name: Create ssl directory
+  file:
+    path: /etc/ssl/satnogs.org/
+    state: directory
+    owner: root
+    group: root
+    mode: 0700
   tags:
-    - nginx
-    - firewalld
+    - ssl
+
+- name: Copy ssl cerificates
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: root
+    group: root
+    mode: 0400
+  with_items:
+    - {
+      src: "ssl/satnogs.org/satnogs-unified.crt",
+      dest: "{{ ssl_cert }}"
+      }
+    - {
+      src: "ssl/satnogs.org/satnogs.key",
+      dest: "{{ ssl_cert_key }}"
+      }
+  notify: restart nginx
+
+- name: Enable nginx service
+  service: name=nginx state=started enabled=yes
