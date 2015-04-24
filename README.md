@@ -24,3 +24,9 @@ ansible-playbook main.yml
     to plain text file.
 
 [ansible-vault]: http://docs.ansible.com/playbooks_vault.html
+
+## License
+
+&copy; 2014-2015 [Libre Space Foundation](http://librespacefoundation.org).
+
+Licensed under the [Creative Commons Attribution-ShareAlike 3.0 License](LICENSE).
