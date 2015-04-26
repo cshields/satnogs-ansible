@@ -8,5 +8,5 @@
     - common
     - { role: firewalld, tags: ['firewall'] }
     - { role: nginx, tags: ['nginx'] }
-    - { role: postgres, tags: ['postgres', 'database'] }
+    - { role: mariadb, tags: ['mariadb', 'database'] }
     #- satnogs-network

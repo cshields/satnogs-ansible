@@ -1,7 +1,14 @@
 ---
 # vars file for nginx
+stages:
+  network_prod: network.satnogs.org
+  database_prod: db.satnogs.org
+  network_dev: network-dev.satnogs.org
+  database_dev: db-dev.satnogs.org
 
-sitename: "network.satnogs.org"
 ssl_cert: "/etc/ssl/satnogs.org/ssl-unified.crt"
 ssl_cert_key: "/etc/ssl/satnogs.org/ssl.key"
-satnogs_root: "/var/www/satnogs/app/static"
+
+app_root:
+  prod: "/var/www/satnogs/prod/app/static"
+  dev: "/var/www/satnogs/dev/app/static"

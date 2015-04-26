@@ -9,14 +9,14 @@ server {
     listen [::]:80;
     listen 80;
     server_name _;
-    return 301 https://{{ sitename }}$request_uri;
+    return 301 https://{{ stages['network_prod'] }}$request_uri;
 }
 
 server {
     listen [::]:443 ssl spdy;
     listen 443 ssl spdy;
-    server_name {{ sitename }};
-    root {{ satnogs_root }};
+    server_name {{ stages['network_prod'] }};
+    root {{ app_root['prod'] }};
     server_tokens off;
 
     # Configure maximum picture size
