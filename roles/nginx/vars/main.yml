@@ -3,14 +3,22 @@
 stages:
   network_prod: network.satnogs.org
   database_prod: db.satnogs.org
-  network_dev: network.dev.satnogs.org
-  database_dev: db.dev.satnogs.org
+  network_dev: dev.network.satnogs.org
+  database_dev: dev.db.satnogs.org
 
 ssl_cert: "/etc/ssl/satnogs.org/ssl-unified.crt"
 ssl_cert_key: "/etc/ssl/satnogs.org/ssl.key"
 
+var_www: /var/www/satnogs
+
 app_root:
-  network_prod: "/var/www/satnogs/prod/network/static"
-  database_prod: "/var/www/satnogs/prod/db/static"
-  network_dev: "/var/www/satnogs/dev/network/static"
-  database_dev: "/var/www/satnogs/dev/db/static"
+  network_prod:   "{{ var_www }}/prod/network/app"
+  database_prod:  "{{ var_www }}/prod/db/app"
+  network_dev:    "{{ var_www }}/dev/network/app"
+  database_dev:   "{{ var_www }}/dev/db/app"
+
+venv_root:
+  network_prod:   "{{ var_www }}/prod/network/venv"
+  database_prod:  "{{ var_www }}/prod/db/venv"
+  network_dev:    "{{ var_www }}/dev/network/venv"
+  database_dev:   "{{ var_www }}/dev/db/venv"
