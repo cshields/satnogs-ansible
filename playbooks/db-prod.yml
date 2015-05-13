@@ -1,0 +1,15 @@
+---
+- hosts: vm2
+  sudo: yes
+  sudo_user: root
+
+  roles:
+    - { role: satnogs, tags: ['db_prod', 'db'] }
+
+  vars:
+    var_www: '/var/www/satnogs'
+    app_dir: '{{ var_www }}/db/prod/app'
+    venv_dir: '{{ var_www }}/db/prod/venv'
+    sitename: 'db'
+    socket_dir: '/var/run/satnogs/{{ sitename }}.sock'
+    requirements_file: '{{ app_dir }}/requirements/production.txt'

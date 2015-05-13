@@ -16,3 +16,4 @@
     - database
 
 - include: secure-installation.yml tags=database
+- include: create_databases.yml tags=database

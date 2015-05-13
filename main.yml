@@ -2,11 +2,14 @@
 - hosts: all
   sudo: yes
   sudo_user: root
-  gather_facts: True
 
   roles:
     - common
     - { role: firewalld, tags: ['firewall'] }
-    - { role: nginx, tags: ['nginx'] }
     - { role: mariadb, tags: ['mariadb', 'database'] }
-    #- satnogs-network
+    - { role: nginx, tags: ['nginx'] }
+
+- include: playbooks/db-dev.yml
+  #- include: playbooks/network-dev.yml
+  #- include: playbooks/db-prod.yml
+  #- include: playbooks/network-prod.yml

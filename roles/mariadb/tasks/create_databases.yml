@@ -1,0 +1,14 @@
+---
+
+- name: Create mysql databases
+  mysql_db: name={{ item }} state=present
+  with_items: mysql_databases
+
+- name: Create mysql user satnogs and give privileges
+  mysql_user: >
+    name=satnogs
+    password={{ mysql_satnogs_password }}
+    priv={{ item }}.*:ALL
+    append_privs=true
+    state=present
+  with_items: mysql_databases

@@ -1,0 +1,17 @@
+---
+- hosts: all
+  sudo: yes
+  sudo_user: root
+
+  vars:
+    sitename: 'db-dev'
+    var_www: '/var/www/satnogs'
+    app_dir: '{{ var_www }}/db/dev/app'
+    venv_dir: '{{ var_www }}/db/dev/venv'
+    socket_dir: '/var/run/satnogs/{{ sitename }}.sock'
+    requirements_file: '{{ app_dir }}/requirements/production.txt'
+    repo_url: https://github.com/satnogs/satnogs-db.git
+    repo_branch: dev
+
+  roles:
+    - { role: satnogs, tags: ['db_dev', 'db'] }

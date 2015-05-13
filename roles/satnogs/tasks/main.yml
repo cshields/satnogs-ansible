@@ -1,0 +1,78 @@
+---
+
+- name: Create application user and home.
+  user:
+    name: satnogs
+    group: satnogs
+    groups: nginx
+  tags:
+    - base
+    - user
+    - provision
+    - app
+
+- name: Create app directories
+  file:
+    path: '{{ item }}'
+    state: directory
+    owner: satnogs
+    group: satnogs
+    recurse: yes
+  with_items:
+    - '{{ app_dir }}'
+    - '{{ venv_dir }}'
+
+- name: Install required system packages.
+  yum:
+    name: "{{ item }}"
+    state:  present
+  with_items:
+    - git
+    - gcc
+    - libjpeg-turbo-devel
+    - libxml2-devel
+    - libxslt-devel
+    - mysql-devel
+    - python-setuptools
+    - python-virtualenv
+    - python-pip
+  tags:
+    - base
+    - packages
+    - provision
+    - app
+
+- name: Pull sources from the repository.
+  sudo: yes
+  sudo_user: satnogs
+  git:
+    repo: "{{ repo_url }}"
+    dest: "{{ app_dir }}"
+    version: "{{ repo_branch }}"
+    force: yes
+    update: yes
+  tags:
+    - repo
+    - app
+
+- name: pip install requirements
+  sudo_user: satnogs
+  pip: >
+    requirements={{ requirements_file }}
+    virtualenv={{ venv_dir }}
+    extra_args='--upgrade'
+  tags:
+    - packages
+    - application
+    - pip
+    - app
+
+- name: Copy nginx conf
+  template:
+    src:  'satnogs.conf.j2'
+    dest: '/etc/nginx/conf.d/satnogs_{{ sitename }}.conf'
+    owner: nginx
+    group: nginx
+    mode: 0644
+  notify:
+    - restart nginx
