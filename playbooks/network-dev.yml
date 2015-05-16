@@ -3,8 +3,8 @@
   sudo: yes
   sudo_user: root
 
-  roles:
-    - { role: satnogs, tags: ['network_dev', 'network'] }
+  vars_files:
+    - roles/mariadb/vars/private.yml
 
   vars:
     var_www: '/var/www/satnogs'
@@ -13,3 +13,8 @@
     sitename: 'network-dev'
     socket_dir: '/var/run/satnogs/{{ sitename }}.sock'
     requirements_file: '{{ app_dir }}/requirements/production.txt'
+    django_settings: 'network.settings.stage'
+    net_dev: true
+
+  roles:
+    - { role: satnogs, tags: ['network_dev', 'network'] }

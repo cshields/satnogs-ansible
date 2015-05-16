@@ -3,6 +3,9 @@
   sudo: yes
   sudo_user: root
 
+  vars_files:
+    - roles/mariadb/vars/private.yml
+
   vars:
     sitename: 'db-dev'
     var_www: '/var/www/satnogs'
@@ -12,6 +15,8 @@
     requirements_file: '{{ app_dir }}/requirements/production.txt'
     repo_url: https://github.com/satnogs/satnogs-db.git
     repo_branch: dev
+    django_settings: db.settings.stage
+    db_dev: true
 
   roles:
     - { role: satnogs, tags: ['db_dev', 'db'] }
