@@ -50,6 +50,14 @@
   tags:
     - nginx
 
+- name: Create log directory
+  file:
+    path: /var/log/nginx/satnogs
+    state: directory
+    owner: satnogs
+    group: satnogs
+    mode: 0755
+
 - name: Create ssl directory
   file:
     path: /etc/ssl/satnogs.org/
