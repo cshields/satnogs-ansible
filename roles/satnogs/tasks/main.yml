@@ -67,6 +67,16 @@
     - pip
     - app
 
+- name: Copy env variables
+  template:
+    src:  'env.j2'
+    dest: '{{ app_dir }}/.env'
+    owner: satnogs
+    group: satnogs
+    mode: 0644
+  tags:
+    - env
+
 - name: Copy nginx conf
   template:
     src:  'satnogs.conf.j2'
