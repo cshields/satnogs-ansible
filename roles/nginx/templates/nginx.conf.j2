@@ -31,6 +31,8 @@ http {
     #keepalive_timeout  0;
     keepalive_timeout  65;
 
+    server_names_hash_bucket_size 128;
+
     # https://wiki.mozilla.org/Security/Server_Side_TLS
     ssl_dhparam /etc/ssl/dhparam.pem;
     ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
