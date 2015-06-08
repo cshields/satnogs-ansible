@@ -17,6 +17,9 @@
     repo_branch: dev
     django_settings: db.settings.stage
     db_dev: true
+    db_prod: false
+    net_dev: false
+    net_prod: false
 
   roles:
     - { role: satnogs, tags: ['db_dev', 'db'] }

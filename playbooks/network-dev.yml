@@ -1,5 +1,5 @@
 ---
-- hosts: vm2
+- hosts: all
   sudo: yes
   sudo_user: root
 
@@ -13,8 +13,13 @@
     sitename: 'network-dev'
     socket_dir: '/var/run/satnogs/{{ sitename }}.sock'
     requirements_file: '{{ app_dir }}/requirements/production.txt'
+    repo_url: https://github.com/satnogs/satnogs-network.git
+    repo_branch: dev
     django_settings: 'network.settings.stage'
     net_dev: true
+    db_dev: false
+    db_prod: false
+    net_prod: false
 
   roles:
     - { role: satnogs, tags: ['network_dev', 'network'] }
