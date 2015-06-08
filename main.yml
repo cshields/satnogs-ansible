@@ -10,6 +10,6 @@
     - { role: nginx, tags: ['nginx'] }
 
 - include: playbooks/db-dev.yml
-  #- include: playbooks/network-dev.yml
-  #- include: playbooks/db-prod.yml
-  #- include: playbooks/network-prod.yml
+- include: playbooks/network-dev.yml
+- include: playbooks/db-prod.yml
+- include: playbooks/network-prod.yml
