@@ -1,15 +1,12 @@
 ---
 
-- name: Create application user and home.
-  user:
-    name: satnogs
+- name: Create /var/run/satnogs dir
+  file:
+    path: /var/run/satnogs
+    state: directory
+    owner: satnogs
     group: satnogs
-    groups: nginx
-  tags:
-    - base
-    - user
-    - provision
-    - app
+    mode: 0755
 
 - name: Create app directories
   file:
@@ -39,8 +36,6 @@
   tags:
     - base
     - packages
-    - provision
-    - app
 
 - name: Pull sources from the repository.
   sudo: yes
@@ -55,19 +50,17 @@
     - repo
     - app
 
-- name: pip install requirements
+- name: django | pip install requirements
   sudo_user: satnogs
-  pip: >
-    requirements={{ requirements_file }}
-    virtualenv={{ venv_dir }}
-    extra_args='--upgrade'
+  pip:
+    requirements: "{{ requirements_file }}"
+    virtualenv: "{{ venv_dir }}"
+    extra_args: "--upgrade"
+  changed_when: false
   tags:
-    - packages
-    - application
     - pip
-    - app
 
-- name: Copy env variables
+- name: django | copy env variables
   template:
     src:  'env.j2'
     dest: '{{ app_dir }}/.env'
@@ -77,12 +70,32 @@
   tags:
     - env
 
+- name: django | collectstatic
+  django_manage:
+    command: collectstatic
+    app_path: "{{ app_dir }}"
+    virtualenv: "{{ venv_dir }}"
+    settings: "{{ django_settings }}"
+  tags:
+    - collectstatic
+
+- name: django | migrate
+  django_manage:
+    command: migrate
+    app_path: "{{ app_dir }}"
+    virtualenv: "{{ venv_dir }}"
+    settings: "{{ django_settings }}"
+  tags:
+    - migrate
+
 - name: Copy nginx conf
   template:
-    src:  'satnogs.conf.j2'
+    src:  'nginx_vhost.conf.j2'
     dest: '/etc/nginx/conf.d/satnogs_{{ sitename }}.conf'
     owner: nginx
     group: nginx
     mode: 0644
+  tags:
+    - nginx
   notify:
     - restart nginx
