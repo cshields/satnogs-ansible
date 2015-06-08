@@ -45,7 +45,7 @@
     group: root
     mode: 0644
 
-- name: Create application user and home.
+- name: Create satnogs user
   user:
     name: satnogs
     groups: nginx
