@@ -36,3 +36,21 @@
 - name: Add ssh keys
   authorized_key: user={{ item.name }} key="{{ item.key }}"
   with_items: admins
+
+- name: Copy tmpfiles
+  copy:
+    src: satnogs-tmpfiles.d
+    dest: /etc/tmpfiles.d/satnogs.conf
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Create application user and home.
+  user:
+    name: satnogs
+    groups: nginx
+  tags:
+    - base
+    - user
+    - provision
+    - app
