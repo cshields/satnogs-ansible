@@ -37,7 +37,15 @@
   authorized_key: user={{ item.name }} key="{{ item.key }}"
   with_items: admins
 
-- name: Copy tmpfiles
+- name: Create /var/run/satnogs dir
+  file:
+    path: /var/run/satnogs
+    state: directory
+    owner: satnogs
+    group: satnogs
+    mode: 0755
+
+- name: Copy tmpfiles for /var/run/tmpfiles
   copy:
     src: satnogs-tmpfiles.d
     dest: /etc/tmpfiles.d/satnogs.conf

@@ -1,1 +1,1 @@
-d /var/run/gunicorn 0755 satnogs satnogs -
+d /var/run/satnogs 0755 satnogs satnogs -

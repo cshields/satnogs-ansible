@@ -1,13 +1,5 @@
 ---
 
-- name: Create /var/run/satnogs dir
-  file:
-    path: /var/run/satnogs
-    state: directory
-    owner: satnogs
-    group: satnogs
-    mode: 0755
-
 - name: Create app directories
   file:
     path: '{{ item }}'
