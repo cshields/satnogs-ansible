@@ -19,9 +19,9 @@ server {
     root {{ app_dir }};
     server_tokens off;
 
-    # Configure maximum picture size
-    # Note that Diaspora has a client side check set at 4M
-    client_max_body_size 4M;
+    client_max_body_size 100M;
+    proxy_connect_timeout 300s;
+    proxy_read_timeout 300s;
 
     ssl_certificate {{ ssl_cert }};
     ssl_certificate_key {{ ssl_cert_key }};
