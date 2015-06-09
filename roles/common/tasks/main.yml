@@ -37,6 +37,16 @@
   authorized_key: user={{ item.name }} key="{{ item.key }}"
   with_items: admins
 
+- name: Create satnogs user
+  user:
+    name: satnogs
+    groups: nginx
+  tags:
+    - base
+    - user
+    - provision
+    - app
+
 - name: Create /var/run/satnogs dir
   file:
     path: /var/run/satnogs
@@ -52,13 +62,3 @@
     owner: root
     group: root
     mode: 0644
-
-- name: Create satnogs user
-  user:
-    name: satnogs
-    groups: nginx
-  tags:
-    - base
-    - user
-    - provision
-    - app
