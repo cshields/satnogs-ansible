@@ -61,3 +61,19 @@
     owner: root
     group: root
     mode: 0644
+
+- name: Create .ssh dir
+  file:
+    path: /home/satnogs/.ssh
+    state: directory
+    owner: satnogs
+    group: satnogs
+    mode: 0700
+
+- name: Copy known_hosts file to access GitHub
+  copy:
+    src: github_known_hosts
+    dest: /home/satnogs/.ssh/known_hosts
+    owner: satnogs
+    group: satnogs
+    mode: 0644
