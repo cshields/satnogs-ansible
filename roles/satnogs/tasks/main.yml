@@ -1,0 +1,93 @@
+---
+
+- name: Create app directories
+  file:
+    path: '{{ item }}'
+    state: directory
+    owner: satnogs
+    group: satnogs
+    recurse: yes
+  with_items:
+    - '{{ app_dir }}'
+    - '{{ venv_dir }}'
+
+- name: Install required system packages.
+  yum:
+    name: "{{ item }}"
+    state:  present
+  with_items:
+    - git
+    - gcc
+    - libjpeg-turbo-devel
+    - libxml2-devel
+    - libxslt-devel
+    - mysql-devel
+    - python-setuptools
+    - python-virtualenv
+    - python-pip
+  tags:
+    - base
+    - packages
+
+- name: Pull sources from the repository.
+  sudo: yes
+  sudo_user: satnogs
+  git:
+    repo: "{{ repo_url }}"
+    dest: "{{ app_dir }}"
+    version: "{{ repo_branch }}"
+    force: yes
+    update: yes
+  tags:
+    - repo
+    - app
+
+- name: django | pip install requirements
+  sudo_user: satnogs
+  pip:
+    requirements: "{{ requirements_file }}"
+    virtualenv: "{{ venv_dir }}"
+    extra_args: "--upgrade"
+  changed_when: false
+  tags:
+    - pip
+
+- name: django | copy env variables
+  template:
+    src:  'env.j2'
+    dest: '{{ app_dir }}/.env'
+    owner: satnogs
+    group: satnogs
+    mode: 0644
+  tags:
+    - env
+
+- name: django | collectstatic
+  django_manage:
+    command: collectstatic
+    app_path: "{{ app_dir }}"
+    virtualenv: "{{ venv_dir }}"
+    settings: "{{ django_settings }}"
+  tags:
+    - collectstatic
+
+- name: django | migrate
+  django_manage:
+    command: migrate
+    app_path: "{{ app_dir }}"
+    virtualenv: "{{ venv_dir }}"
+    settings: "{{ django_settings }}"
+  tags:
+    - migrate
+
+- name: Copy nginx conf
+  template:
+    src:  'nginx_vhost.conf.j2'
+    dest: '/etc/nginx/conf.d/satnogs_{{ sitename }}.conf'
+    owner: nginx
+    group: nginx
+    mode: 0644
+  tags:
+    - nginx
+  notify:
+    - restart nginx

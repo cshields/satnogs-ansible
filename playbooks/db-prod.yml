@@ -1,0 +1,25 @@
+---
+- hosts: all
+  sudo: yes
+  sudo_user: root
+
+  vars_files:
+    - roles/mariadb/vars/private.yml
+
+  vars:
+    var_www: '/var/www/satnogs'
+    app_dir: '{{ var_www }}/db/prod/app'
+    venv_dir: '{{ var_www }}/db/prod/venv'
+    sitename: 'db'
+    socket_dir: '/var/run/satnogs/{{ sitename }}.sock'
+    requirements_file: '{{ app_dir }}/requirements/production.txt'
+    django_settings: 'db.settings.production'
+    repo_url: https://github.com/satnogs/satnogs-db.git
+    repo_branch: '0.1'
+    db_prod: true
+    db_dev: false
+    net_dev: false
+    net_prod: false
+
+  roles:
+    - { role: satnogs, tags: ['db_prod', 'db'] }

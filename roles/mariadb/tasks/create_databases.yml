@@ -1,0 +1,20 @@
+---
+- name: Create mysql databases
+  mysql_db:
+    name: '{{ item.name }}'
+    state: '{{ item.state | default("present") }}'
+    collation: utf8_unicode_ci
+    encoding: utf8
+  with_items: mysql_databases
+  when: item.name is defined and item.name
+
+- name: Create mysql users and give privileges
+  mysql_user:
+    name: '{{ item.name }}'
+    password: '{{ item.password }}'
+    state: '{{ item.state | default("present") }}'
+    priv: '{{ item.priv | default(item.name + ".*:ALL") }}'
+    append_privs: '{{ item.append_privs | default("no") }}'
+    host: '{{ item.host | default("localhost") }}'
+  with_items: mysql_users
+  when: (item.name is defined and item.name)

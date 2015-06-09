@@ -1,22 +1,22 @@
 ########################
 ## {{ ansible_managed }}
 ########################
-upstream {{ stages['network_prod'] }} {
-server unix:/var/run/satnogs/{{ stages['network_prod'] }}.sock fail_timeout=0;
+upstream {{ sitename }} {
+server unix:{{ socket_dir }} fail_timeout=0;
 }
 
 server {
     listen [::]:80;
     listen 80;
-    server_name _;
-    return 301 https://{{ stages['network_prod'] }}$request_uri;
+    server_name {{ sitename }}.satnogs.org;
+    return 301 https://{{ sitename }}.satnogs.org$request_uri;
 }
 
 server {
     listen [::]:443 ssl spdy;
     listen 443 ssl spdy;
-    server_name {{ stages['network_prod'] }};
-    root {{ app_root['network_prod'] }};
+    server_name {{ sitename }}.satnogs.org;
+    root {{ app_dir }};
     server_tokens off;
 
     # Configure maximum picture size
@@ -28,14 +28,18 @@ server {
     ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
     ssl_prefer_server_ciphers on;
 
-    error_log   /var/log/nginx/{{ stages['network_prod'] }}_error.log;
+    error_log   /var/log/nginx/satnogs/{{ sitename }}_error.log;
 
     location / {
       # Proxy if requested file not found
-      try_files $uri $uri/index.html $uri.html @satnogs;
+      try_files $uri $uri/index.html $uri.html @{{ sitename }}-loc;
     }
 
-    location @{{ stages['network_prod'] }}{
+    location /static/ {
+      alias {{ app_dir }}/staticfiles/;
+    }
+
+    location @{{ sitename }}-loc {
 
       gzip off;
       proxy_set_header    X-Forwarded-Ssl     on;
@@ -46,6 +50,6 @@ server {
       proxy_set_header    X-Frame-Options     SAMEORIGIN;
       proxy_redirect      off;
 
-      proxy_pass http://{{ stages['network_prod'] }};
+      proxy_pass http://{{ sitename }};
     }
 }
