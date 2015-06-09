@@ -28,7 +28,7 @@ server {
     ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
     ssl_prefer_server_ciphers on;
 
-    error_log   /var/log/nginx/satnogs/{{ sitename }}_error.log;
+    error_log   /var/log/nginx/satnogs/{{ sitename }}-error.log;
 
     location / {
       # Proxy if requested file not found
