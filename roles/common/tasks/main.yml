@@ -40,7 +40,6 @@
 - name: Create satnogs user
   user:
     name: satnogs
-    groups: nginx
   tags:
     - base
     - user
