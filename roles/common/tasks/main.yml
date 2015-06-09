@@ -37,6 +37,15 @@
   authorized_key: user={{ item.name }} key="{{ item.key }}"
   with_items: admins
 
+- name: Create satnogs user
+  user:
+    name: satnogs
+  tags:
+    - base
+    - user
+    - provision
+    - app
+
 - name: Create /var/run/satnogs dir
   file:
     path: /var/run/satnogs
@@ -53,12 +62,18 @@
     group: root
     mode: 0644
 
-- name: Create satnogs user
-  user:
-    name: satnogs
-    groups: nginx
-  tags:
-    - base
-    - user
-    - provision
-    - app
+- name: Create .ssh dir
+  file:
+    path: /home/satnogs/.ssh
+    state: directory
+    owner: satnogs
+    group: satnogs
+    mode: 0700
+
+- name: Copy known_hosts file to access GitHub
+  copy:
+    src: github_known_hosts
+    dest: /home/satnogs/.ssh/known_hosts
+    owner: satnogs
+    group: satnogs
+    mode: 0644

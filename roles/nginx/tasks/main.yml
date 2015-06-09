@@ -58,6 +58,9 @@
     group: satnogs
     mode: 0755
 
+- name: Add user satnogs to nginx group
+  user: name=satnogs groups=nginx
+
 - name: Create ssl directory
   file:
     path: /etc/ssl/satnogs.org/
