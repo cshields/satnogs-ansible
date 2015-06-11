@@ -12,9 +12,11 @@
     venv_dir: '{{ var_www }}/db/prod/venv'
     sitename: 'db'
     socket_dir: '/var/run/satnogs/{{ sitename }}.sock'
+    pid_file: '/var/run/satnogs/{{ sitename }}.pid'
     requirements_file: '{{ app_dir }}/requirements/production.txt'
     django_settings: 'db.settings.production'
     gunicorn_workers: 2
+    wsgi: 'db.wsgi'
     repo_url: https://github.com/satnogs/satnogs-db.git
     repo_branch: '0.1'
     db_prod: true
