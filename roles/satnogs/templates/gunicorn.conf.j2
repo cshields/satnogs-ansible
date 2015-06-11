@@ -1,0 +1,10 @@
+# {{ ansible_managed }}
+
+error_logfile = "/var/log/nginx/satnogs/{{ sitename }}-error.log"
+workers = {{ gunicorn_workers }}
+timeout = 120
+graceful_timeout = 30
+preload = True
+bind = "unix:/var/run/satnogs/{{ sitename }}.sock"
+pid = "/var/run/satnogs/{{ sitename }}.pid"
+name = "gunicorn-{{ sitename }}"

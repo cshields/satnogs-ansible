@@ -80,6 +80,16 @@
   tags:
     - migrate
 
+- name: django | copy gunicorn conf
+  template:
+    src:  'gunicorn.conf.j2'
+    dest: '{{ app_dir }}/gunicorn.conf'
+    owner: satnogs
+    group: satnogs
+    mode: 0644
+  tags:
+    - gunicorn
+
 - name: Copy nginx conf
   template:
     src:  'nginx_vhost.conf.j2'

@@ -57,6 +57,7 @@
     owner: satnogs
     group: satnogs
     mode: 0755
+    recurse: yes
 
 - name: Add user satnogs to nginx group
   user: name=satnogs groups=nginx
