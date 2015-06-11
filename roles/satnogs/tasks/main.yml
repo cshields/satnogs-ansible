@@ -1,5 +1,4 @@
 ---
-
 - name: Create app directories
   file:
     path: '{{ item }}'
@@ -10,24 +9,6 @@
   with_items:
     - '{{ app_dir }}'
     - '{{ venv_dir }}'
-
-- name: Install required system packages.
-  yum:
-    name: "{{ item }}"
-    state:  present
-  with_items:
-    - git
-    - gcc
-    - libjpeg-turbo-devel
-    - libxml2-devel
-    - libxslt-devel
-    - mysql-devel
-    - python-setuptools
-    - python-virtualenv
-    - python-pip
-  tags:
-    - base
-    - packages
 
 - name: Pull sources from the repository.
   sudo: yes

@@ -22,6 +22,10 @@
     - libxslt-devel
     - libxml2-devel
     - libjpeg-turbo-devel
+    - mysql-devel
+    - python-setuptools
+    - python-virtualenv
+    - python-pip
   tags:
     - yum
     - pkg
