@@ -16,6 +16,7 @@
     requirements_file: '{{ app_dir }}/requirements/production.txt'
     django_settings: 'network.settings.production'
     gunicorn_workers: 2
+    wsgi: 'network.wsgi'
     repo_url: https://github.com/satnogs/satnogs-network.git
     repo_branch: '0.1'
     net_prod: true
