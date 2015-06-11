@@ -1,0 +1,18 @@
+# {{ ansible_managed }}
+[Unit]
+Description=gunicorn daemon for satnogs {{ sitename }}
+After=network.target
+
+[Service]
+PIDFile=/var/run/satnogs/{{ sitename }}.pid
+User=satnogs
+Group=satnogs
+WorkingDirectory={{ app_dir }}
+ExecStart={{ venv_dir }}/bin/gunicorn --config gunicorn.conf --pid {{ pid_file }} {% if 'db' in "{{ sitename }}" %}db{% elif 'network' in "{{ sitename }}" %}network{% endif %}.wsgi
+ExecReload=/bin/kill -s HUP $MAINPID
+ExecStop=/bin/kill -s TERM $MAINPID
+PrivateTmp=true
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

@@ -12,6 +12,7 @@
     venv_dir: '{{ var_www }}/network/prod/venv'
     sitename: 'network'
     socket_dir: '/var/run/satnogs/{{ sitename }}.sock'
+    pid_file: '/var/run/satnogs/{{ sitename }}.pid'
     requirements_file: '{{ app_dir }}/requirements/production.txt'
     django_settings: 'network.settings.production'
     gunicorn_workers: 2
