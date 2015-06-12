@@ -1,5 +1,5 @@
 ---
-- hosts: all
+- hosts: vm2
   sudo: yes
   sudo_user: root
 
