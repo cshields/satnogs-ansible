@@ -26,7 +26,7 @@ Vagrant.configure(2) do |config|
   config.vm.provision "ansible" do |ansible|
     ansible.playbook = "main.yml"
     ansible.vault_password_file = "vault-passwd.txt"
-    ansible.extra_vars = {
+    ansible.extra_vars = { env: 'test'
     }
   end
 end

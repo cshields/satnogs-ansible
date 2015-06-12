@@ -3,6 +3,9 @@
   sudo: yes
   sudo_user: root
 
+  vars:
+    - env: 'prod'
+
   roles:
     - common
     - { role: firewalld, tags: ['firewall'] }
