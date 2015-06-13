@@ -25,8 +25,10 @@ Vagrant.configure(2) do |config|
   # Make sure the vault passwd file is decrypted
   config.vm.provision "ansible" do |ansible|
     ansible.playbook = "main.yml"
+    ansible.inventory_path = "vagrant_hosts"
+    ansible.host_key_checking = false
     ansible.vault_password_file = "vault-passwd.txt"
-    ansible.extra_vars = {
+    ansible.extra_vars = { env: 'test'
     }
   end
 end
