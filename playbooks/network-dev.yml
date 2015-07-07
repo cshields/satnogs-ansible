@@ -17,7 +17,7 @@
     django_settings: 'network.settings.stage'
     gunicorn_workers: 1
     wsgi: 'network.wsgi'
-    repo_url: https://github.com/satnogs/satnogs-network.git
+    repo_url: https://github.com/satnogs/satnogs-network
     repo_branch: dev
     net_dev: true
     db_dev: false

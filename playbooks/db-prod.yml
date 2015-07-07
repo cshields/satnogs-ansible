@@ -17,8 +17,8 @@
     django_settings: 'db.settings.production'
     gunicorn_workers: 2
     wsgi: 'db.wsgi'
-    repo_url: https://github.com/satnogs/satnogs-db.git
-    repo_branch: '0.1'
+    repo_url: https://github.com/satnogs/satnogs-db
+    repo_branch: '0.2'
     db_prod: true
     db_dev: false
     net_dev: false
