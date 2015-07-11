@@ -18,7 +18,7 @@
     gunicorn_workers: 2
     wsgi: 'db.wsgi'
     repo_url: https://github.com/satnogs/satnogs-db
-    repo_branch: '0.2'
+    repo_branch: '{{ db_tag }}'
     db_prod: true
     db_dev: false
     net_dev: false

@@ -10,10 +10,10 @@ Ansible scripts for SatNOGS infra
 
 ## Usage
 
-Assuming you have sudo access and `hosts.gpg` is decrypted:
+Assuming you have sudo access and `hosts.gpg` is decrypted, to run the whole thing:
 
 ```
-ansible-playbook main.yml
+ansible-playbook -v main.yml --extra-vars "db_tag=x.x net_tag=x.x"
 ```
 
 **Note:** Some sensitive files like `hosts` and `private.yml` are

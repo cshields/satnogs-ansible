@@ -18,7 +18,7 @@
     gunicorn_workers: 2
     wsgi: 'network.wsgi'
     repo_url: https://github.com/satnogs/satnogs-network
-    repo_branch: '0.2'
+    repo_branch: '{{ net_tag }}'
     net_prod: true
     db_dev: false
     db_prod: false
