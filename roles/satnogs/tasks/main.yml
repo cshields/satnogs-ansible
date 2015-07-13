@@ -80,8 +80,6 @@
     mode: 0644
   tags:
     - nginx
-  notify:
-    - restart nginx
 
 - name: Copy gunicorn systemd service file
   template:
@@ -95,10 +93,17 @@
     - systemd
   notify:
     - daemon reload
-    - "restart gunicorn-{{ sitename }}"
 
 - name: Enable gunicorn service
   service: name=gunicorn-{{ sitename }} state=started enabled=yes
   tags:
     - gunicorn
     - systemd
+
+- name: Restart gunicorn and nginx
+  service: name=gunicorn-{{ sitename }} state=restarted enabled=yes
+  notify:
+    - restart nginx
+  tags:
+      - gunicorn
+      - nginx
