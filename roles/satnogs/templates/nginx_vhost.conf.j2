@@ -2,7 +2,7 @@
 ## {{ ansible_managed }}
 ########################
 upstream {{ sitename }} {
-server unix:{{ socket_dir }} fail_timeout=0;
+    server unix:{{ socket_dir }} fail_timeout=0;
 }
 
 server {
@@ -31,25 +31,27 @@ server {
     error_log   /var/log/nginx/satnogs/{{ sitename }}-error.log;
 
     location / {
-      # Proxy if requested file not found
-      try_files $uri $uri/index.html $uri.html @{{ sitename }}-loc;
+        # Proxy if requested file not found
+        try_files $uri $uri/index.html $uri.html @{{ sitename }}-loc;
+    }
+
+    location = /favicon.ico  {
+        rewrite "/favicon.ico" /static/favicon.ico;
     }
 
     location /static/ {
-      alias {{ app_dir }}/staticfiles/;
+        alias {{ app_dir }}/staticfiles/;
     }
 
     location @{{ sitename }}-loc {
-
-      gzip off;
-      proxy_set_header    X-Forwarded-Ssl     on;
-      proxy_set_header    X-Real-IP           $remote_addr;
-      proxy_set_header    X-Forwarded-For     $proxy_add_x_forwarded_for;
-      proxy_set_header    X-Forwarded-Proto   https;
-      proxy_set_header    Host                $http_host;
-      proxy_set_header    X-Frame-Options     SAMEORIGIN;
-      proxy_redirect      off;
-
-      proxy_pass http://{{ sitename }};
+        gzip off;
+        proxy_set_header    X-Forwarded-Ssl     on;
+        proxy_set_header    X-Real-IP           $remote_addr;
+        proxy_set_header    X-Forwarded-For     $proxy_add_x_forwarded_for;
+        proxy_set_header    X-Forwarded-Proto   https;
+        proxy_set_header    Host                $http_host;
+        proxy_set_header    X-Frame-Options     SAMEORIGIN;
+        proxy_redirect      off;
+        proxy_pass http://{{ sitename }};
     }
 }
