@@ -61,6 +61,16 @@
   tags:
     - migrate
 
+- name: django | data sync cronjobs
+  template:
+    src:  'update_data.j2'
+    dest: '/etc/cron.daily/update_data-{{ sitename }}.sh'
+    owner: satnogs
+    group: satnogs
+    mode: 0755
+  tags:
+    - cron
+
 - name: django | copy gunicorn conf
   template:
     src:  'gunicorn.conf.j2'

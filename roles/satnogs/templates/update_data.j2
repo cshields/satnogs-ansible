@@ -1,0 +1,12 @@
+#!/bin/bash
+
+# Activate virtualenv
+. {{ venv_dir }}/bin/activate
+
+# Run update commands
+{% if net_dev or net_prod %}
+python {{ app_dir }}/manage.py fetch_data
+python {{ app_dir }}/manage.py update_all_tle
+{% elif db_prod or db_dev %}
+python {{ app_dir }}/manage.py update_all_sats
+{% endif %}
