@@ -1,0 +1,9 @@
+{% if db_prod %}
+curl https://intake.opbeat.com/api/v1/organizations/{{ opbeat_orgid }}/apps/{{ opbeat_appid[0]['db_prod'] }}/releases/ -H "Authorization: Bearer {{ opbeat_secret }}" -d rev=`git log -n 1 --pretty=format:%H` -d branch=`git rev-parse --abbrev-ref HEAD` -d status=completed
+{% elif db_dev %}
+curl https://intake.opbeat.com/api/v1/organizations/{{ opbeat_orgid }}/apps/{{ opbeat_appid[1]['db_dev'] }}/releases/ -H "Authorization: Bearer {{ opbeat_secret }}" -d rev=`git log -n 1 --pretty=format:%H` -d branch=`git rev-parse --abbrev-ref HEAD` -d status=completed
+{% elif net_prod %}
+curl https://intake.opbeat.com/api/v1/organizations/{{ opbeat_orgid }}/apps/{{ opbeat_appid[2]['net_prod'] }}/releases/ -H "Authorization: Bearer {{ opbeat_secret }}" -d rev=`git log -n 1 --pretty=format:%H` -d branch=`git rev-parse --abbrev-ref HEAD` -d status=completed
+{% elif net_dev %}
+curl https://intake.opbeat.com/api/v1/organizations/{{ opbeat_orgid }}/apps/{{ opbeat_appid[3]['net_dev'] }}/releases/ -H "Authorization: Bearer {{ opbeat_secret }}" -d rev=`git log -n 1 --pretty=format:%H` -d branch=`git rev-parse --abbrev-ref HEAD` -d status=completed
+{% endif %}

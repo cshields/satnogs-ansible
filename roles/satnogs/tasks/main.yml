@@ -104,6 +104,16 @@
   notify:
     - daemon reload
 
+- name: opbeat | copy opbeat notify script
+  template:
+    src:  'opbeat_notify.j2'
+    dest: '/usr/local/bin/opbeat_notify_{{ sitename }}.sh'
+    owner: satnogs
+    group: satnogs
+    mode: 0755
+  tags:
+    - opbeat
+
 - name: Enable gunicorn service
   service: name=gunicorn-{{ sitename }} state=started enabled=yes
   tags:
@@ -115,5 +125,12 @@
   notify:
     - restart nginx
   tags:
-      - gunicorn
-      - nginx
+    - gunicorn
+    - nginx
+
+- name: opbeat | notify opbeat
+  shell: /usr/local/bin/opbeat_notify_{{ sitename }}.sh
+  args:
+    chdir: '{{ app_dir }}'
+  tags:
+    - opbeat
