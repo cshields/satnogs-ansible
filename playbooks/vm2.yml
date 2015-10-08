@@ -1,0 +1,10 @@
+---
+- hosts: vm2
+  sudo: yes
+  sudo_user: root
+
+  roles:
+    - common
+    - { role: firewalld, tags: ['firewall', 'firewalld'] }
+    - { role: mariadb, tags: ['mariadb', 'database'] }
+    - { role: nginx, tags: ['nginx'] }

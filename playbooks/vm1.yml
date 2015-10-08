@@ -1,0 +1,21 @@
+---
+- hosts: vm1
+  sudo: true
+
+  vars_files:
+    - secrets.yml
+
+  roles:
+    - common
+    - epel-repo
+    - users
+    - { role: firewalld, tags: ['firewalld', 'firewall'] }
+    - { role: mariadb, tags: ['mariadb', 'database'] }
+    - { role: nginx, tags: ['nginx'] }
+    - { role: ssl, tags: 'ssl' }
+    - { role: nginx, tags: ['nginx'] }
+    - { role: php, tags: ['php'] }
+    - { role: wordpress, tags: ['wordpress'] }
+      #- { role: mediawiki, tags: ['mediawiki', 'wiki'] }
+    - { role: docker, tags: 'docker' }
+    - { role: discourse, tags: 'discourse' }
