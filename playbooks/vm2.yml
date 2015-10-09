@@ -1,0 +1,15 @@
+---
+- hosts: vm2.satnogs.org
+  sudo: true
+
+  roles:
+    - common
+    - { role: firewalld, tags: ['firewall', 'firewalld'] }
+    - { role: mariadb, tags: ['mariadb', 'database'] }
+    - { role: nginx, tags: ['nginx'] }
+
+# specific playbooks concerning the django app
+- include: db-dev.yml
+- include: network-dev.yml
+- include: db-prod.yml
+- include: network-prod.yml

@@ -1,0 +1,23 @@
+---
+# vars for mariadb
+mysql_user_home: /root
+mysql_root_username: root
+mysql_root_password: "{{ MARIADB_ROOT_PASSWORD }}"
+
+###
+# mysql_databases:
+#   name: 'db_name'
+#   state: 'absent'   # optional, default: present
+###
+mysql_databases: []
+
+###
+# mysql_users:
+#   name: 'username'
+#   password: p@ssw0rD
+#   state: 'absent'         # optional, default: present
+#   priv: "db_name.*:ALL"   # optional, default: name + ".*:ALL"
+#   append_privs: no        # optional, default: no
+#   host: 1.2.3.4           # optional, default: localhost
+###
+mysql_users: []
