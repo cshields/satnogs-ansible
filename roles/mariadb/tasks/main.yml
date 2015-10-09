@@ -7,13 +7,21 @@
     - mariadb-server
     - mariadb-devel
     - MySQL-python
+
+- name: Copy my.cnf
+  template:
+    src: my.cnf.j2
+    dest: /etc/my.cnf
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - restart mariadb
   tags:
-    - database
+    - etcmycnf
 
 - name: Ensure MariaDB is started and enabled on boot
   service: name=mariadb state=started enabled=yes
-  tags:
-    - database
 
-- include: secure-installation.yml tags=database
-- include: create_databases.yml tags=database
+- include: secure-installation.yml
+- include: create_databases.yml
