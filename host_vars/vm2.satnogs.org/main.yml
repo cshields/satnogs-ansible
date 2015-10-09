@@ -1,0 +1,17 @@
+---
+## mariadb
+mysql_databases:
+  - name: 'network_prod'
+  - name: 'network_dev'
+  - name: 'db_prod'
+  - name: 'db_dev'
+
+mysql_users:
+  - name: 'network_prod'
+    password: "{{ MARIADB_NETWORK_PROD_PASSWORD }}"
+  - name: 'network_dev'
+    password: "{{ MARIADB_NETWORK_DEV_PASSWORD }}"
+  - name: 'db_prod'
+    password: "{{ MARIADB_DB_PROD_PASSWORD }}"
+  - name: 'db_dev'
+    password: "{{ MARIADB_DB_DEV_PASSWORD }}"

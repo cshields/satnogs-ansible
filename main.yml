@@ -1,12 +1,6 @@
 ---
-# vm1: provision with the essentials
+# provision all vm1 tasks
 - include: playbooks/vm1.yml
 
-# vm2: provision with the essentials
+# provision all vm2 tasks
 - include: playbooks/vm2.yml
-
-# vm2: specific playbooks with the django app
-- include: playbooks/db-dev.yml
-- include: playbooks/network-dev.yml
-- include: playbooks/db-prod.yml
-- include: playbooks/network-prod.yml
