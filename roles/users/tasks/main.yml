@@ -1,0 +1,6 @@
+---
+- name: Add users
+  user: name={{ item }} shell=/bin/false home=/var/www/{{ item }}
+  with_items:
+    - wordpress
+    - mediawiki
