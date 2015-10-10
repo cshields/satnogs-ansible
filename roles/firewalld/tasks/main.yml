@@ -1,17 +1,15 @@
 ---
-# tasks file for firewalld
-
 - name: Install firewalld
   yum: name=firewalld state=present
 
 - name: Enable firewalld
-  service: name=firewalld enabled=yes state=started
+  service: name=firewalld state=started enabled=yes
 
-- name: Add nginx ports to firewall
-  firewalld: port={{ item }} zone=public permanent=true state=enabled
-  with_items:
-    - 80/tcp
-    - 443/tcp
+- name: Update firewall rules
+  firewalld:
+    port: "{{ item.value.port }}/{{ item.value.protocol }}"
+    permanent: "{{ item.value.permanent }}"
+    state: "{{ item.value.state }}"
+    zone: "{{ item.value.zone }}"
+  with_dict: firewalld_rules
   notify: restart firewalld
-  tags:
-    - nginx
