@@ -1,26 +1,19 @@
 ---
-# tasks file for nginx
+# Variable setup.
+- name: Include OS-specific variables.
+  include_vars: "{{ ansible_os_family }}.yml"
 
-- name: Install nginx
-  yum: name=nginx state=present
-  notify: restart nginx
-  tags:
-    - nginx
+- name: Define nginx_user.
+  set_fact:
+    nginx_user: "{{ __nginx_user }}"
+  when: nginx_user is not defined
 
-- name: Remove default configuration file
-  file:
-    path: /etc/nginx/nginx.conf.default
-    state: absent
-  notify:
-    - restart nginx
+# Setup/install tasks.
+- include: setup-RedHat.yml
+  when: ansible_os_family == 'RedHat'
 
-- name: Make sure conf.d/ exists
-  file:
-    path: /etc/nginx/conf.d/
-    state: directory
-    owner: root
-    group: root
-    mode: 0755
+- include: setup-Debian.yml
+  when: ansible_os_family == 'Debian'
 
 - name: Copy configuration files
   template:
@@ -34,61 +27,39 @@
       src: "nginx.conf.j2",
       dest: "/etc/nginx/nginx.conf"
       }
+#    - {
+#      src: "wordpress.conf.j2",
+#      dest: "/etc/nginx/conf.d/wordpress.conf"
+#      }
+#    - {
+#      src: "discourse.conf.j2",
+#      dest: "/etc/nginx/conf.d/discourse.conf"
+#      }
+    - {
+      src: "mediawiki.conf.j2",
+      dest: "/etc/nginx/conf.d/mediawiki.conf"
+      }
+#    - {
+#      src: "monit.conf.j2",
+#      dest: "/etc/nginx/conf.d/monit.conf"
+#      }
   notify: restart nginx
-  tags:
-    - nginx
+
 
 - name: Create dhparam.pem if not exists
-  command: openssl dhparam -out /etc/ssl/dhparam.pem 2048 creates=/etc/ssl/dhparam.pem
-  tags:
-    - ssl
-
-- name: Remove nginx access logs if any
-  shell: find /var/log/nginx/ -name "*access*" -print0 | xargs --no-run-if-empty -0 rm
-  register: rm_result
-  changed_when: 'rm_result.stdout != ""'
-  tags:
-    - nginx
-
-- name: Create log directory
-  file:
-    path: /var/log/nginx/satnogs
-    state: directory
-    owner: satnogs
-    group: satnogs
-    mode: 0755
-    recurse: yes
-
-- name: Add user satnogs to nginx group
-  user: name=satnogs groups=nginx
-
-- name: Create ssl directory
-  file:
-    path: /etc/ssl/satnogs.org/
-    state: directory
-    owner: root
-    group: root
-    mode: 0700
-  tags:
-    - ssl
-
-- name: Copy ssl cerificates
-  copy:
-    src: "{{ item.src }}"
-    dest: "{{ item.dest }}"
-    owner: root
-    group: root
-    mode: 0400
+  command: >
+    openssl dhparam -out {{ ssl_cert_path }}/dhparam.{{ item }}.pem 2048
+    creates={{ ssl_cert_path }}/dhparam.{{ item }}.pem
   with_items:
-    - {
-      src: "ssl/satnogs.org/satnogs-unified.crt",
-      dest: "{{ ssl_cert }}"
-      }
-    - {
-      src: "ssl/satnogs.org/satnogs.key",
-      dest: "{{ ssl_cert_key }}"
-      }
-  notify: restart nginx
+    - '{{ mediawiki_sitename }}'
+  tags:
+    - ssl
 
-- name: Enable nginx service
+- name: Add nginx to user groups
+  user:
+    name: nginx
+    append: yes
+    groups: wordpress,mediawiki
+
+- name: Ensure nginx is started and enabled to start at boot.
   service: name=nginx state=started enabled=yes
