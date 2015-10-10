@@ -1,6 +1,4 @@
 ---
-- include_vars: private.yml
-
 - name: Check if .my.cnf file already exists.
   stat: path={{ mysql_user_home }}/.my.cnf
   register: mycnf_file
