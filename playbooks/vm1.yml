@@ -1,0 +1,17 @@
+---
+- hosts: vm1.satnogs.org
+  sudo: true
+
+  roles:
+    #    - common
+    - epel-repo
+    - { role: mariadb, tags: ['mariadb', 'database'] }
+    - { role: users, tags: users }
+    - { role: php, tags: ['php'] }
+      #- { role: firewalld, tags: ['firewalld', 'firewall'] }
+    - { role: ssl, tags: 'ssl' }
+    - { role: nginx, tags: ['nginx'] }
+      #- { role: mediawiki, tags: ['mediawiki', 'wiki'] }
+    - { role: wordpress, tags: ['wordpress'] }
+    - { role: docker, tags: 'docker' }
+    - { role: discourse, tags: 'discourse' }

@@ -1,0 +1,57 @@
+---
+## mariadb
+mysql_databases:
+  - name: "{{ MW_DB_NAME }}"
+
+mysql_users:
+  - name: "{{ MW_DB_USER }}"
+    password: "{{ MW_DB_PASSWORD }}"
+    priv: "{{ MW_DB_NAME }}.*:ALL"
+
+## php
+php5_post_max_size: '40M'
+# List of managed pools
+php5_pools: [ '{{ php5_pool_default }}', '{{ mediawiki_pool }}' ]
+
+php5_pool_default:
+  enabled: false
+  name: 'www'
+
+mediawiki_pool:
+  enabled: true
+  name: 'mediawiki'
+  user: 'mediawiki'
+  group: 'mediawiki'
+  pm_max_children: 10
+  php_admin_value:
+    memory_limit: '256M'
+    log_errors: 'on'
+    error_log: '/var/run/php-fpm/mediawiki-php-error.log'
+  environment:
+    TMP: '/tmp'
+    TMPDIR: '/tmp'
+    TEMP: '/tmp'
+
+wordpress_pool:
+  enabled: true
+  name: 'wordpress'
+  user: 'wordpress'
+  group: 'wordpress'
+  pm_max_children: 10
+  php_admin_value:
+    memory_limit: '256M'
+    log_errors: 'on'
+    error_log: '/var/run/php-fpm/wp-php-error.log'
+  environment:
+    TMP: '/tmp'
+    TMPDIR: '/tmp'
+    TEMP: '/tmp'
+
+## nginx
+mediawiki_sitename: 'wiki.satnogs.org'
+mediawiki_root: "/var/www/{{ mediawiki_sitename }}"
+
+wordpress_sitename: 'satnogs.org'
+wordpress_root: "/var/www/{{ wordpress_sitename }}"
+
+ssl_cert_path: '/etc/ssl/satnogs.org'
