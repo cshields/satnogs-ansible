@@ -19,9 +19,11 @@ php5_pool_default:
 
 mediawiki_pool:
   enabled: true
-  name: 'mediawiki'
+  name: 'wiki.satnogs.org'
   user: 'mediawiki'
   group: 'mediawiki'
+  listen_owner: 'mediawiki'
+  listen_group: 'mediawiki'
   pm_max_children: 10
   php_admin_value:
     memory_limit: '256M'
@@ -49,7 +51,7 @@ wordpress_pool:
 
 ## nginx
 mediawiki_sitename: 'wiki.satnogs.org'
-mediawiki_root: "/var/www/{{ mediawiki_sitename }}"
+mediawiki_root: "/var/www/{{ mediawiki_sitename }}/public_html"
 
 wordpress_sitename: 'satnogs.org'
 wordpress_root: "/var/www/{{ wordpress_sitename }}"
