@@ -1,0 +1,60 @@
+---
+
+- name: Install php packages
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items: php_packages
+
+- name: Create directory for php-fpm logs
+  file:
+    path: '/var/log/php-fpm'
+    state: 'directory'
+    owner: 'root'
+    group: 'root'
+    mode: '0755'
+
+- name: Create directory /var/run/php-fpm
+  file:
+    path: '/var/run/php-fpm'
+    state: 'directory'
+    owner: 'root'
+    group: 'root'
+    mode: '0755'
+
+- name: Create directory /etc/php-fpm.d
+  file:
+    path: '/etc/php-fpm.d'
+    state: 'directory'
+    owner: 'root'
+    group: 'root'
+    mode: '0755'
+
+- name: Check existence of php5-fpm-reopenlogs
+  stat:
+    path: '/usr/lib/php5/php5-fpm-reopenlogs'
+  register: php5_register_reopenlogs
+
+- name: Configure logrotate for php5-fpm
+  template:
+    src: 'etc/logrotate.d/php5-fpm.j2'
+    dest: '/etc/logrotate.d/php5-fpm'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
+
+#- name: Configure php.ini for php5-fpm
+#  template:
+#    src: 'etc/php.ini.j2'
+#    dest: '/etc/php/fpm/php.ini'
+#    owner: 'root'
+#    group: 'root'
+#    mode: '0644'
+#  notify: Restart php5-fpm
+
+
+- include: php5_pools.yml
+  when: php5_manage_pools is defined and php5_manage_pools == True
+
+- name: Enable and start php-fpm
+  service: name=php-fpm state=started enabled=yes

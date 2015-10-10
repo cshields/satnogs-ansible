@@ -1,0 +1,20 @@
+---
+
+- name: Setup php5-fpm pool configuration
+  template:
+    src: 'etc/php-fpm.d/pool.conf.j2'
+    dest: '/etc/php-fpm.d/{{ item.name }}.conf'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
+  with_items: php5_pools
+  notify: [ 'Reload php5-fpm' ]
+
+- name: Disable php5-fpm pools
+  file:
+    path: '/etc/php-fpm.d/{{ item.name }}.conf'
+    state: 'absent'
+  with_items: php5_pools
+  when: item.enabled is defined and item.enabled == False
+  notify: [ 'Restart php5-fpm' ]
+
