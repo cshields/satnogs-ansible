@@ -2,16 +2,38 @@
 - hosts: vm1.satnogs.org
   sudo: true
 
+  pre_tasks:
+    - name: Make app root directories
+      file:
+        dest: /var/www/{{ item }}
+        state: directory
+        mode: 0755
+      with_items:
+        - wiki.satnogs.org
+
   roles:
-    #    - common
+    # - common
     - epel-repo
+    - { role: firewalld, tags: ['firewalld', 'firewall'] }
     - { role: mariadb, tags: ['mariadb', 'database'] }
     - { role: users, tags: users }
-    - { role: php, tags: ['php'] }
-      #- { role: firewalld, tags: ['firewalld', 'firewall'] }
     - { role: ssl, tags: 'ssl' }
     - { role: nginx, tags: ['nginx'] }
-      #- { role: mediawiki, tags: ['mediawiki', 'wiki'] }
-    - { role: wordpress, tags: ['wordpress'] }
-    - { role: docker, tags: 'docker' }
-    - { role: discourse, tags: 'discourse' }
+    - { role: php, tags: ['php'] }
+    # - { role: mediawiki, tags: ['mediawiki', 'wiki'] }
+    # - { role: wordpress, tags: ['wordpress'] }
+    # - { role: docker, tags: 'docker' }
+    # - { role: discourse, tags: 'discourse' }
+
+  post_tasks:
+    - name: Fix app root dir permissions
+      file:
+        path: "/var/www/{{ item.path }}"
+        owner: "{{ item.owner }}"
+        group: "{{ item.group }}"
+        recurse: yes
+      with_items:
+        - { path: 'wiki.satnogs.org',
+            owner: 'mediawiki',
+            group: 'mediawiki'
+          }
