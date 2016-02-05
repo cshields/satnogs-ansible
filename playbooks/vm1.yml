@@ -22,8 +22,8 @@
     - { role: php, tags: ['php'] }
     # - { role: mediawiki, tags: ['mediawiki', 'wiki'] }
     # - { role: wordpress, tags: ['wordpress'] }
-    # - { role: docker, tags: 'docker' }
-    # - { role: discourse, tags: 'discourse' }
+    - { role: docker, tags: 'docker' }
+    - { role: discourse, tags: 'discourse' }
 
   post_tasks:
     - name: Fix app root dir permissions
