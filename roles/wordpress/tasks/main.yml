@@ -1,0 +1,42 @@
+---
+- name: Install WP-CLI
+  get_url: url={{ wp_cli_url }} dest={{ wp_cli_bin }} mode=0755
+
+- name: Download WordPress
+  command: >
+    wp core download
+    --path={{ wp_root }}
+    --locale={{ wp_lang }}
+    --version={{ wp_version }}
+    --allow-root
+    creates={{ wp_root }}/wp-includes
+
+- name: Add WordPress config file
+  template: src=wp-config.php.j2 dest={{ wp_root }}/wp-config.php
+
+- name: Install WordPress tables
+  command: >
+    wp core install
+    --url={{ host }}
+    --title={{ site_name }}
+    --admin_user={{ wp_admin_user }}
+    --admin_password={{ wp_admin_password }}
+    --admin_email={{ wp_admin_email }}
+    --allow-root
+    chdir={{ wp_root }}
+
+- name: Ensure readme.html is removed
+  file:
+    name: "{{ wp_root }}/readme.html"
+    state: absent
+
+- include: plugins.yml tags=plugins
+- include: themes.yml tags=themes
+
+- name: Change ownership of WordPress installation
+  file:
+    path: "{{ wp_root }}"
+    owner: "{{ wp_user }}"
+    group: "{{ wp_user }}"
+    state: directory
+    recurse: yes

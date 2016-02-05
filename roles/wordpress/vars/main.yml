@@ -1,0 +1,7 @@
+---
+host: openkosmos.org
+site_name: openkosmos.org
+wp_root: /var/www/wordpress
+
+wp_plugins:
+  - { name: akismet, version: 3.1.7 }

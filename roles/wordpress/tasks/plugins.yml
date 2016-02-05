@@ -1,0 +1,14 @@
+---
+- name: Delete Hello Dolly plugin
+  command: wp plugin delete hello --allow-root chdir={{ wp_root }}
+
+- name: Install WordPress plugins
+  sudo_user: "{{ wp_user }}"
+  command: >
+    wp plugin install {{ item.name }}
+    --version={{ item.version }}
+    --activate
+    --force
+    chdir={{ wp_root }}
+  with_items: wp_plugins
+  when: wp_plugins is defined

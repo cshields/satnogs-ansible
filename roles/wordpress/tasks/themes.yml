@@ -1,0 +1,9 @@
+---
+- name: Install WordPress themes
+  sudo_user: "{{ wp_user }}"
+  command: >
+    wp theme install {{ item.name }}
+    --force
+    chdir={{ wp_root }}
+  with_items: wp_themes
+  when: wp_thems is defined

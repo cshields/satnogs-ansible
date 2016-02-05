@@ -1,0 +1,14 @@
+---
+wp_admin_user: "{{ WP_ADMIN_USER }}"
+wp_admin_password: "{{ WP_ADMIN_PASSWORD }}"
+wp_admin_email: "{{ WP_ADMIN_EMAIL }}"
+wp_cli_bin: /usr/bin/wp
+wp_cli_url: https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+wp_db_host: localhost
+wp_db_import: false
+wp_debug_enabled: false
+wp_cache_enabled: false
+wp_lang: en_US
+wp_table_prefix: wp_
+wp_version: 4.4.2
+wp_user: 'wordpress'
