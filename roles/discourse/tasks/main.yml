@@ -1,0 +1,27 @@
+---
+- name: Clone discourse docker
+  git:
+    accept_hostkey: yes
+    dest: /var/discourse
+    force: yes
+    repo: https://github.com/discourse/discourse_docker.git
+
+- name: Copy app.yml
+  template:
+    src: app.yml.j2
+    dest: '/var/discourse/containers/app.yml'
+    owner: root
+    group: root
+    mode: 0644
+
+# temp hack, make this to depend on the nginx role and copy files from there
+- name: Copy ssl files
+  command: cp /etc/ssl/openkosmos/{{ item }} /var/discourse/shared/standalone/ssl/{{ item }}
+  with_items:
+    - ssl.crt
+    - ssl.key
+  tags:
+    - ssl
+
+- name: Rebuild Discourse app
+  shell: /var/discourse/launcher rebuild app

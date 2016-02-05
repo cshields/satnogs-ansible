@@ -1,0 +1,17 @@
+---
+discourse_db_shared_buffers: '768MB'
+discourse_unicorn_workers: 4
+discourse_developer_emails: []
+discourse_hostname: 'talk.openkosmos.org'
+
+discourse_smtp_address: 'mail.openkosmos.org'
+#discourse_smtp_port: "{{ DISCOURSE_SMTP_PORT }}"
+#discourse_smtp_user_name: "{{ DISCOURSE_SMTP_USER_NAME }}"
+#discourse_smtp_password: "{{ DISCOURSE_SMTP_PASSWORD }}"
+
+plugins:
+  - 'https://github.com/vikhyat/discourse-persona.git'
+  - 'https://github.com/discourse/discourse-solved.git'
+  - 'https://github.com/ligthyear/discourse-plugin-checklist.git'
+  - 'https://github.com/discourse/discourse-spoiler-alert.git'
+  - 'https://github.com/discourse/discourse-akismet.git'
