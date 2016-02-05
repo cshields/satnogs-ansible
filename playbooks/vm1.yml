@@ -1,6 +1,6 @@
 ---
 - hosts: vm1.satnogs.org
-  sudo: true
+  become: true
 
   pre_tasks:
     - name: Make app root directories
