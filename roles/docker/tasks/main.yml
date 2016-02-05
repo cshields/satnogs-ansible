@@ -1,0 +1,11 @@
+---
+- name: Install docker and family
+  yum: name={{ item }} state=present
+  with_items:
+    - docker
+    - docker-logrotate
+    - docker-selinux
+    - docker-python
+
+- name: Start and enable docker
+  service: name=docker state=started enabled=yes
