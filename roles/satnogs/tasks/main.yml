@@ -64,7 +64,7 @@
 - name: django | data sync cronjobs
   template:
     src:  'update_data.j2'
-    dest: '/etc/cron.daily/update_data-{{ sitename }}.sh'
+    dest: '/etc/cron.hourly/update_data-{{ sitename }}.sh'
     owner: satnogs
     group: satnogs
     mode: 0755
