@@ -1,0 +1,135 @@
+---
+- include_vars: "{{ item }}"
+  with_first_found:
+    - "{{ ansible_distribution }}.yml"
+    - "{{ ansible_os_family }}.yml"
+  tags: vars
+
+- include: mongodb.yml
+  when: rocket_chat_include_mongodb|bool
+  tags: mongodb
+
+- name: Ensure the Rocket.Chat service group is present
+  group:
+    name: "{{ rocket_chat_service_group }}"
+    state: present
+    system: true
+
+- name: Ensure the Rocket.Chat service user is present
+  user:
+    comment: Rocket.Chat Service User
+    name: "{{ rocket_chat_service_user }}"
+    group: "{{ rocket_chat_service_group }}"
+    home: "{{ rocket_chat_application_path }}"
+    createhome: true
+    shell: /bin/false
+    state: present
+    system: true
+
+- name: Ensure Rocket.Chat dependencies are installed
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items: "{{ rocket_chat_dep_packages }}"
+
+- name: Ensure link /bin/node -> /bin/nodejs exists
+  file:
+    src: /bin/node
+    dest: /bin/nodejs
+    state: link
+
+- name: Ensure n (NodeJS) is installed
+  npm:
+    name: n
+    global: true
+    executable: "{{ rocket_chat_original_npm }}"
+
+- name: Check to see if n has installed the required 'node' binary
+  stat:
+    path: "{{ rocket_chat_node_10_40_path }}/node"
+  register: n_10_40_node_bin
+
+- name: Install the 0.10.40 NodeJS environment via n
+  shell: n 0.10.40
+  when: not n_10_40_node_bin.stat.exists|bool
+
+- name: Check to see if this is the initial Rocket.Chat deployment
+  stat:
+    path: "{{ rocket_chat_application_path }}/bundle"
+  register: rocket_chat_deploy_state
+
+- name: Fetch the Rocket.Chat binary tarball
+  get_url:
+    url: "{{ rocket_chat_tarball_remote }}"
+    sha256sum: "{{ rocket_chat_tarball_sha256sum }}"
+    dest: "{{ rocket_chat_application_path }}/rocket.chat-{{ rocket_chat_version }}.tgz"
+    timeout: "{{ rocket_chat_tarball_fetch_timeout }}"
+    validate_certs: "{{ rocket_chat_tarball_validate_remote_cert }}"
+  become: true
+  become_user: "{{ rocket_chat_service_user }}"
+
+- meta: flush_handlers
+
+- name: Unpack the Rocket.Chat binary tarball
+  unarchive:
+    copy: false
+    src: "{{ rocket_chat_application_path }}/rocket.chat-{{ rocket_chat_version }}.tgz"
+    dest: "{{ rocket_chat_application_path }}"
+    creates: "{{ rocket_chat_application_path }}/bundle"
+  become: true
+  become_user: "{{ rocket_chat_service_user }}"
+  tags: build
+
+- name: Install Rocket.Chat via NPM
+  npm:
+    state: present
+    path: "{{ rocket_chat_application_path }}/bundle/programs/server"
+    executable: "{{ rocket_chat_original_npm }}"
+  become: true
+  become_user: "{{ rocket_chat_service_user }}"
+  tags: build
+
+- name: Ensure the Rocket.Chat application data permissions are correct
+  file:
+    path: "{{ rocket_chat_application_path }}"
+    state: directory
+    owner: "{{ rocket_chat_service_user }}"
+    group: "{{ rocket_chat_service_user }}"
+    recurse: true
+  tags: build
+
+- include_vars: "{{ item }}"
+  with_first_found:
+    - "{{ ansible_distribution }}_{{ ansible_distribution_major_version }}.yml"
+    - "{{ ansible_os_family }}_{{ ansible_distribution_major_version }}.yml"
+    - "{{ ansible_distribution }}.yml"
+    - "{{ ansible_os_family }}.yml"
+  tags: service
+
+- name: Deploy the Rocket.Chat service file
+  template:
+    src: "{{ rocket_chat_service_template.src }}"
+    dest: "{{ rocket_chat_service_template.dest }}"
+  notify: Update the Rocket.Chat service configuration
+  tags: service
+
+- meta: flush_handlers
+
+- name: Ensure the MongoDB replSets have been initiated
+  shell: >-
+    mongo --eval 'rs.initiate()' &&
+    touch .mongo_rs_initialised
+  become: yes
+  become_user: mongodb
+  args:
+    chdir: /var/lib/mongodb
+    creates: /var/lib/mongodb/.mongo_rs_initialised
+  when: rocket_chat_include_mongodb|bool
+
+- name: Ensure the Rocket.Chat service is running/enabled
+  service: name=rocketchat state=started enabled=true
+  tags: service
+
+- include: nginx.yml
+  when: rocket_chat_include_nginx|bool
+  tags: nginx

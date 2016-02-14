@@ -1,0 +1,5 @@
+- hosts: vm1.satnogs.org
+  become: true
+
+  roles:
+    - { role: rocketchat }
